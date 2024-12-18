@@ -27,15 +27,18 @@
                                     <tr>
                                         <td style="width: 60%; border: 1px solid black; padding: 1px;">
                                             <b>To:</b>MAHAVIR
-                                            <br/><b>Address:</b>
-                                            Opp. Optic Palace, Raopura Main Road, Vadodara
-                                            <br/><b>GST:</b>24ABCFM0833C1ZX
+                                            <br/><b>Address:</b> <t t-esc="doc.partner_id.street"/><t t-esc="doc.partner_id.street2"/>, <t t-esc="doc.partner_id.city"/>
+                                            <t t-esc="doc.partner_id.zip"/><t t-esc="doc.partner_id.state_id.name"/>, <t t-esc="doc.partner_id.country_id.name"/>
+                                            <br/><br/><b>GST:</b>24ABCFM0833C1ZX  (Now Coming static value)
                                         </td>
                                         <td style="width: 40%; border: 1px solid black; padding: 5px;">
-                                            <b>Order No.:</b>00361
-                                            <br/><b>Date:</b>29/05/2024
-                                            <br/><b>Season:</b>WINTER 2024
-                                            <br/><b>Brand:</b>PIONEER
+                                            <b>Order No.:</b> <t t-esc="doc.name"/>
+                                                <br/><b>Date:</b> <t t-esc="doc.date_order.strftime('%Y-%m-%d')"/>
+                                                <br/><b>Distributor:</b> <t t-esc="doc.distributor_id.name"/>
+                                                <br/><b>Agent:</b>
+                                                <br/><b>Transport:</b>
+                                            <br/><b>Season:</b> <t t-esc="v.product_template_id.season_id.name"/>
+                                            <br/><b>Brand:</b> <t t-esc="v.product_template_id.brand_id.name"/>
                                         </td>
                                     </tr>
                                 </table>
@@ -82,7 +85,7 @@
                                                         </t>
                                                     </t>
                                                     <td style="border: 1px solid black; text-align: center;"><t t-esc="line.get('total_quantity', '-')"/></td>
-                                                    <td style="border: 1px solid black; text-align: center;"><t t-esc="'%.2f' % line.get('price_subtotal', 0.0)"/></td>
+                                                    <td style="border: 1px solid black; text-align: center;"><t t-esc="'%.2f' % line.get('price_subtotal_type', 0.0)"/></td>
                                                 </tr>
                                             </t>
                                         </t>

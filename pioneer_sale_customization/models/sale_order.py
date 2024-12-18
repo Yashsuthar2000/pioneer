@@ -24,39 +24,32 @@ class SaleOrder(models.Model):
             all_types.add(type_)
 
             if product not in grouped_data:
-                grouped_data[product] = {'product_name': product, 'price_subtotal': 0}
+                grouped_data[product] = {'product_name': product}
 
             if type_ not in grouped_data[product]:
-                grouped_data[product][type_] = {}
+                grouped_data[product][type_] = {'sizes': {}, 'price_subtotal': 0}
 
-            grouped_data[product][type_][size] = rec.product_uom_qty
-
-        for product, data in grouped_data.items():
-            for type_ in all_types:
-                if type_ not in data:
-                    data[type_] = {}
-                if type_ + '_total_quantity' not in data:
-                    data[type_ + '_total_quantity'] = 0
-                if 'price_subtotal' not in data:
-                    data['price_subtotal'] = 0
-
-                sizes = data.get(type_, {})
-                data[type_ + '_total_quantity'] = sum(sizes.values())
+            # count quantity for each size and type
+            grouped_data[product][type_]['sizes'][size] = rec.product_uom_qty
+            # count subtotal for each product and type
+            grouped_data[product][type_]['price_subtotal'] += rec.price_unit * rec.product_uom_qty
 
         prepared_data = []
 
         for product, data in grouped_data.items():
             for type_ in all_types:
-                sizes = data.get(type_, {})
+                sizes = data[type_]['sizes']
                 sizes_sum = sum(sizes.values())
+                price_subtotal_type = data[type_]['price_subtotal']
                 prepared_data.append({
                     'product_name': data['product_name'],
                     'type': type_,
                     'sizes': sizes,
-                    'total_quantity': data[type_ + '_total_quantity'],
+                    'total_quantity': sizes_sum,
                     'sizes_sum': sizes_sum,
-                    'price_subtotal': data['price_subtotal']
+                    'price_subtotal_type': price_subtotal_type
                 })
+
         return prepared_data
 
 
