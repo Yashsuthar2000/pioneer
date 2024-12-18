@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="res_partner_inherited_view" model="ir.ui.view">
+        <field name="name">res.partner.inherited.view</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form/sheet/div[2]/h1" position="after">
+                <group>
+                    <field name="retailer_type" widget="radio" options="{'horizontal': True}"
+                           invisible="company_type != 'person'"/>
+                </group>
+            </xpath>
+            <xpath expr="//form/sheet/div[2]/div/field[@name='parent_id']" position="before">
+                <label for="parent_id" string="Distributor" invisible="retailer_type != 'distributor'"/>
+            </xpath>
+
+            <xpath expr="//form/sheet/div[2]/div/field[@name='parent_id']" position="attributes">
+                <attribute name="invisible">retailer_type != 'distributor'</attribute>
+                <attribute name="required">retailer_type == 'distributor'</attribute>
+                <attribute name="placeholder">Distributor</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

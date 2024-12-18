@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_order_form_view" model="ir.ui.view">
+        <field name="name">res.partner.form</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='child_ids']" position="attributes">
+                <attribute name="context">{'default_type': 'delivery', 'default_parent_id': id}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="account.res_partner_action_customer" model="ir.actions.act_window">
+        <field name="name">Retailers</field>
+        <field name="domain">[('is_company', '=', False)]</field>
+    </record>
+
+    <record id="action_retail_list" model="ir.actions.act_window">
+        <field name="name">Retailers</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="sale.res_partner_menu" model="ir.ui.menu">
+        <field name="name">Retailers</field>
+    </record>
+</odoo>
+

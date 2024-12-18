@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="paperformat_label" model="report.paperformat">
+        <field name="name">Label Format</field>
+        <field name="default" eval="True"/>
+        <field name="format">custom</field>
+        <field name="page_height">65</field> <!-- in mm -->
+        <field name="page_width">40</field> <!-- in mm -->
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">2</field>
+        <field name="margin_bottom">2</field>
+        <field name="margin_left">2</field>
+        <field name="margin_right">2</field>
+        <field name="dpi">90</field>
+    </record>
+
+    <record id="report_product_template_label_custom" model="ir.actions.report">
+        <field name="name">Custom Product Labels</field>
+        <field name="model">product.label.layout</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">pioneer_product_customizations.report_product_template_label_custom_template</field>
+        <field name="report_file">pioneer_product_customizations.report_product_template_label_custom_template</field>
+        <field name="paperformat_id" ref="pioneer_product_customizations.paperformat_label"/>
+        <field name="print_report_name">'Custom Labels - %s' % (object.name)</field>
+        <field name="binding_type">report</field>
+    </record>
+
+    <template id="report_product_template_label_custom_template">
+            <t t-call="web.basic_layout">
+                <t t-foreach="quantity" t-as="product_id">
+                    <t t-set="product_template_id" t-value="product_template_id"/>
+                    <t t-set="product_rec" t-value="request.env['product.product'].sudo().browse(product_template_id)"/>
+                        <div style="font-family: Arial; font-size: 15px;">
+                            <div style="text-align: center;">
+                                <img t-att-src="'/pioneer_product_customizations/static/src/img/pioneer_icon.png'" style="max-height: 50px;"/>
+                            </div>
+                            <div style="text-align: center; font-weight: bold; font-size: 20px;">Pioneer</div>
+                            <div style="text-align: center; font-size: 9pt;">
+                                Manufactured &amp; Marketed by:
+                                <br/>Pioneer Enterprise
+                                <br/>Vadodara (GUJ) - India
+                                <br/>For Feedback: Call at +91-9409408132
+                                <br/>Email: info@pioneerstudio.in
+                                <br/>Net Quantity: 1N
+                            </div>
+                            <div style="margin-top: 10px;">
+                                Size:
+                                <b><t t-set="filtered_variants" t-value="[variant.name for variant in product_rec['product_template_attribute_value_ids'] if variant.attribute_id.name in ['size', 'style']]"/>
+                                <t t-esc="' / '.join(filtered_variants)"/></b>
+                                <br/>filtered_variants
+                                Details:
+                                <t t-set="color_variants" t-value="[variant.name for variant in product_rec['product_template_attribute_value_ids'] if variant.attribute_id.name == 'color']"/>
+                                <t t-esc="' '.join(color_variants)"/><br/>
+                                Design No:<b> <t t-esc="product_rec.name"/></b><br/>
+                            </div>
+                            <div style="margin-top: 3mm; font-size: 12pt;">
+                                M.R.P:<b> <t t-esc="product_rec.lst_price"/></b><br/>
+                                <span style="font-size: 6pt;">(Max retail Price) (Inclusive of all taxes)</span>
+                            </div>
+                            <t t-if="product_rec['barcode']">
+                                <div style="text-align: center; padding-top: 20px;">
+                                    <img style="width:250px;height:50px;"
+                                         t-att-src="'report/barcode/?barcode_type=%s&amp;value=%s&amp;
+                                                width=%s&amp;height=%s'%('EAN13',product_rec['barcode'],265,80)"/>
+                                </div>
+                                <div style="padding-left: 70px;"><t t-esc="product_rec['barcode']"/></div>
+                            </t>
+                        </div>
+                    </t>
+                </t>
+    </template>
+</odoo>

@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="report_saleorder_document_inherited" inherit_id="sale.report_saleorder_document">
+        <xpath expr="//t" position="replace">
+            <t t-call="web.basic_layout">
+                <div class="page">
+                    <t t-set="v" t-value="docs.order_line"/>
+                    <t t-set="count" t-value="0"/>
+                    <t t-foreach="[v[i:i + 35] for i in range(0, len(v), 35)]" t-as="order_lines">
+                        <div style="border: 2px solid black; padding: 10px; margin-bottom: 5px;">
+                            <div style="text-align: center; font-size: 18px; font-weight: bold; padding-bottom: 5px;">
+                                PIONEER ENTERPRISE
+                            </div>
+                            <div style="text-align: center; font-size: 12px; padding-top: 1px;">
+                                309, 310, Sunrise Point, Chitteshthan Hanuman Mandir Lane, Near Duliram Pendawala,
+                                <br/>Raopura Main Road, Vadodara-390001
+                                <br/>Ph: +91-9409408132, Email: info@pioneerstudio.in, GST No: 24AAXFP2263M1ZM
+                            </div>
+                        </div>
+
+                        <div>
+                            <h3 style="text-align: center; border: 2px solid black; padding: 5px; margin: 0;">
+                                <b><u>SALES ORDER</u></b>
+                            </h3>
+                            <div style="margin-top: 2px;">
+                                <table style="width: 100%; border-collapse: collapse; border: 2px solid black;">
+                                    <tr>
+                                        <td style="width: 60%; border: 1px solid black; padding: 1px;">
+                                            <b>To:</b>MAHAVIR
+                                            <br/><b>Address:</b>
+                                            Opp. Optic Palace, Raopura Main Road, Vadodara
+                                            <br/><b>GST:</b>24ABCFM0833C1ZX
+                                        </td>
+                                        <td style="width: 40%; border: 1px solid black; padding: 5px;">
+                                            <b>Order No.:</b>00361
+                                            <br/><b>Date:</b>29/05/2024
+                                            <br/><b>Season:</b>WINTER 2024
+                                            <br/><b>Brand:</b>PIONEER
+                                        </td>
+                                    </tr>
+                                </table>
+
+                                <table style="width: 100%; border: 1px solid black; border-collapse: collapse; margin-top: 20px; font-size: 10px;">
+                                    <thead>
+                                        <tr>
+                                            <th style="border: 1px solid black; padding: 5px; text-align: center;" rowspan="2">Sr</th>
+                                            <th style="border: 1px solid black; padding: 5px; text-align: center;" rowspan="2">Style No</th>
+                                            <th style="border: 1px solid black; padding: 5px; text-align: center;" rowspan="2">H/F</th>
+                                            <th style="border: 1px solid black; padding: 5px; text-align: center;" rowspan="2">Color</th>
+                                            <th style="border: 1px solid black; padding: 5px; text-align: center;" rowspan="2">Quality</th>
+                                            <th style="border: 1px solid black; padding: 5px; text-align: center;"
+                                                t-att-colspan="len(docs._get_dynamic_size_columns())">Size
+                                            </th>
+                                            <th style="border: 1px solid black; padding: 5px; text-align: center;" rowspan="2">Pcs</th>
+                                            <th style="border: 1px solid black; padding: 5px; text-align: center;" rowspan="2">MRP</th>
+                                        </tr>
+                                        <tr>
+                                            <t t-foreach="docs._get_dynamic_size_columns()" t-as="size">
+                                                <th style="border: 1px solid black; padding: 5px; text-align: center;">
+                                                    <t t-esc="size"/>
+                                                </th>
+                                            </t>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="docs.pioneer_sale_customization()" t-as="line">
+                                            <t t-if="line.get('sizes')">
+                                                <tr>
+                                                    <t t-set="count" t-value="count + 1"/>
+                                                    <td style="border: 1px solid black; text-align: center;"><t t-esc="count"/></td>
+                                                    <td style="border: 1px solid black; text-align: center;"><t t-esc="line.get('product_name')"/></td>
+                                                    <td style="border: 1px solid black; text-align: center;"><t t-esc="line.get('type')"/></td>
+                                                    <td style="border: 1px solid black; text-align: center;">L-PLUM</td>
+                                                    <td style="border: 1px solid black; text-align: center;">
+                                                        <t t-esc="line.get('total_quantity')"/>
+                                                    </td>
+                                                    <t t-if="line.get('sizes')">
+                                                        <t t-foreach="docs._get_dynamic_size_columns()" t-as="size">
+                                                            <td style="border: 1px solid black; text-align: center;">
+                                                                <t t-esc="line.get('sizes').get(size, '-')"/>
+                                                            </td>
+                                                        </t>
+                                                    </t>
+                                                    <td style="border: 1px solid black; text-align: center;"><t t-esc="line.get('total_quantity', '-')"/></td>
+                                                    <td style="border: 1px solid black; text-align: center;"><t t-esc="'%.2f' % line.get('price_subtotal', 0.0)"/></td>
+                                                </tr>
+                                            </t>
+                                        </t>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="row" style="border-top: 2px solid black; padding: 10px; margin-top: 20px;">
+                            <div class="col-6" style="text-align: left; font-size: 12px; padding-top: 5px;">
+                                <br/><b>Remarks :</b>
+                            </div>
+                            <div class="col-6" style="text-align: right; font-size: 12px; padding-top: 5px;">
+                                <br/><b>For, PIONEER ENTERPRISE</b>
+                            </div>
+                        </div>
+                        <div style="text-align: right; font-size: 12px; padding-top: 5px;">
+                            <br/><br/><b>Authorised Signatory</b>
+                        </div>
+                        <div style="page-break-before: always;"/>
+                    </t>
+                </div>
+            </t>
+        </xpath>
+    </template>
+
+    <record id="sale_order_quotation_paperformat" model="report.paperformat">
+        <field name="name">Quotation / Order</field>
+        <field name="default" eval="True"/>
+        <field name="disable_shrinking" eval="True"/>
+        <field name="dpi">96</field>
+        <field name="format">A4</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">2</field>
+        <field name="margin_bottom">10</field>
+        <field name="margin_left">0</field>
+        <field name="margin_right">5</field>
+    </record>
+
+    <record id="sale.action_report_saleorder" model="ir.actions.report">
+        <field name="paperformat_id" ref="pioneer_sale_customization.sale_order_quotation_paperformat"/>
+    </record>
+
+</odoo>

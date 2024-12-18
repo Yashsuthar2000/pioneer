@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="season_master_view_search" model="ir.ui.view">
+        <field name="name">season.master.view.search</field>
+        <field name="model">season.master</field>
+        <field name="arch" type="xml">
+            <search string="season_master_Search">
+                <field name="name"/>
+                <field name="code"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="season_master_view_tree" model="ir.ui.view">
+        <field name="name">season.master.view.tree</field>
+        <field name="model">season.master</field>
+        <field name="arch" type="xml">
+            <list string="season_master_tree">
+                <field name="name"/>
+                <field name="code"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="season_master_view_form" model="ir.ui.view">
+        <field name="name">season.master.view.form</field>
+        <field name="model">season.master</field>
+        <field name="arch" type="xml">
+            <form string="season_master_form">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="code"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="season_action" model="ir.actions.act_window">
+        <field name="name">seasons</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">season.master</field>
+        <field name="view_mode">search,list,form</field>
+    </record>
+
+    <menuitem id="menu_season" name="Season" parent="sale.menu_sale_config" action="season_action" sequence="100"/>
+</odoo>

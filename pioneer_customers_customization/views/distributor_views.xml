@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="action_distributor_list" model="ir.actions.act_window">
+        <field name="name">Distributors</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="domain">[('is_company', '=', True)]</field>
+        <field name="context">{'default_company_type': 'company'}</field>
+    </record>
+
+    <menuitem id="menu_distributor_main"
+              name="Distributors"
+              parent="sale.sale_order_menu"
+              action="action_distributor_list"
+              sequence="50"/>
+</odoo>
+

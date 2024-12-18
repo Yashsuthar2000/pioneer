@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="agent_commission_view_search" model="ir.ui.view">
+        <field name="name">agent.commission.view.search</field>
+        <field name="model">agent.commission</field>
+        <field name="arch" type="xml">
+            <search string="agent_commission_search">
+                <field name="reference_no"/>
+                <field name="name"/>
+                <field name="invoice_ids" widget="many2many_tags"/>
+                <field name="date"/>
+                <field name="amount"/>
+                <field name="state"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="agent_commission_view_list" model="ir.ui.view">
+        <field name="name">agent.commission.view.list</field>
+        <field name="model">agent.commission</field>
+        <field name="arch" type="xml">
+            <list string="agent_commission_list">
+                <field name="reference_no"/>
+                <field name="name"/>
+                <field name="invoice_ids" widget="many2many_tags"/>
+                <field name="date"/>
+                <field name="amount" readonly="1"/>
+                <field name="state" required="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="agent_commission_view_form" model="ir.ui.view">
+        <field name="name">agent.commission.view.form</field>
+        <field name="model">agent.commission</field>
+        <field name="arch" type="xml">
+            <form string="agent_commission_form">
+                <header>
+                    <field name="state" required="1" widget="statusbar"/>
+                    <button name="generate_agent_commission" type="object" class="oe_highlight" string="Generate Commission"/>
+                    <button name="pay_agent_commission" type="object" class="oe_highlight" string="Pay Commission"
+                    invisible="state == 'paid'"/>
+                </header>
+
+                <sheet>
+                    <h1><field name="reference_no"/></h1>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="amount" readonly="1"/>
+                            <field name="percentage" required="1"/>
+                        </group>
+                        <group>
+                            <field name="date"/>
+                            <field name="from_date"/>
+                            <field name="to_date"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Pending Commission" name="invoices">
+                            <field name="invoice_ids"/>
+                        </page>
+                        <page string="Invoice History" name="invoices">
+                            <field name="all_invoices"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="agent_commission_action" model="ir.actions.act_window">
+        <field name="name">Agent Commission</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">agent.commission</field>
+        <field name="view_mode">search,list,form</field>
+    </record>
+
+    <menuitem id="menu_agent_commission" name="Agent Commission" action="agent_commission_action"
+              parent="sale.sale_menu_root" sequence="30"/>
+
+</odoo>
