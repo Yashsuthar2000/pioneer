@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_delivery_assignment_tree" model="ir.ui.view">
+        <field name="name">delivery.assignment.tree</field>
+        <field name="model">delivery.assignment</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="product_id"/>
+                <field name="season_id"/>
+                <field name="brand_id"/>
+                <field name="date_from"/>
+                <field name="date_to"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_delivery_assignment_form" model="ir.ui.view">
+        <field name="name">delivery.assignment.form</field>
+        <field name="model">delivery.assignment</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="product_id"/>
+<!--                            <field name="product_add_mode"/>-->
+                            <field name="product_tmpl_id" domain="[('product_tmpl_id', '=', product_id)]"/>
+                            <field name="season_id"/>
+                            <field name="brand_id"/>
+                        </group>
+                        <group>
+                            <field name="date_from"/>
+                            <field name="date_to"/>
+                            <field name="style"/>
+                        </group>
+                    </group>
+                    <div>
+                        <field name="grid_data" widget="html" readonly="0"/>
+                    </div>
+                    <button name="delivery_assignment_grid" type="object" class="oe_highlight" string="Assign delivery"/>
+                    <notebook>
+                        <page name="delivery_lines" string="Delivery Lines">
+                            <group><field name="move_line_ids" nolabel="1"/></group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_delivery_assignment" model="ir.actions.act_window">
+        <field name="name">Delivery Assignments</field>
+        <field name="res_model">delivery.assignment</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="menu_delivery_assignment" name="Delivery Assignment" action="action_delivery_assignment"
+              parent="sale.sale_menu_root" sequence="30"/>
+
+</odoo>

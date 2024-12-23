@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="view_product_size_wizard_form" model="ir.ui.view">
+        <field name="name">product.size.wizard.form</field>
+        <field name="model">product.size.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Product Size Wizard">
+                <group>
+                    <field name="product_id" options="{'no_create': True}"/>
+                </group>
+                <group>
+                    <field name="table_lines">
+                        <list editable="bottom">
+                            <field name="product_name" readonly="1"/>
+                            <field name="size_id" readonly="1"/>
+                        </list>
+                    </field>
+                </group>
+                <footer>
+                    <button string="Close" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>
