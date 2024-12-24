@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="paperformat_label_for_invoice" model="report.paperformat">
+        <field name="name">Label Format</field>
+        <field name="default" eval="True"/>
+        <field name="format">custom</field>
+        <field name="page_height">220</field>
+        <field name="page_width">180</field> 
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">2</field>
+        <field name="margin_bottom">2</field>
+        <field name="margin_left">2</field>
+        <field name="margin_right">2</field>
+        <field name="dpi">90</field>
+    </record>
+
+    <record id="action_report_invoice_template" model="ir.actions.report">
+        <field name="name">Invoice Report</field>
+        <field name="model">account.move</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">pioneer_invoice_report.invoice_template_report</field>
+        <field name="report_file">pioneer_invoice_report.invoice_template_report</field>
+        <field name="paperformat_id" ref="pioneer_invoice_report.paperformat_label_for_invoice"/>
+        <field name="binding_model_id" ref="model_account_move"/>
+        <field name="print_report_name">'Custom Labels - %s' % (object.name)</field>
+        <field name="binding_type">report</field>
+    </record>
+
+    <template id="invoice_template_report" name="Invoice Info">
+        <t t-call="web.basic_layout">
+            <div class="page">
+                <t t-set="v" t-value="docs.invoice_line_ids"/>
+                <t t-set="count" t-value="0"/>
+                
+                <t t-foreach="[v[i:i + 1] for i in range(0, len(v), 20)]" t-as="invoice_line_ids">
+                    <div style="border: 2px solid black; padding: 10px; margin-bottom: 5px;">
+                        <div style="text-align: center; font-size: 18px; font-weight: bold; padding-bottom: 5px;">
+                            PIONEER ENTERPRISE
+                        </div>
+                        <div style="text-align: center; font-size: 12px; padding-top: 1px;">
+                            309, 310, Sunrise Point, Chitteshthan Hanuman Mandir Lane, Near Duliram Pendawala,Raopura
+                            Main Road, Vadodara-390001
+                            <br/>Ph: +91-9409408132, Email: info@pioneerstudio.in
+                            <br/>
+                            <b>GSTIN No: 24AAXFP2263M1ZM</b>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h3 style="text-align: center; border: 2px solid black; padding: 5px; margin: 0;">
+                            <b>
+                                <u>TAX INVOICE</u>
+                            </b>
+                        </h3>
+                        <div style="margin-top: 2px;">
+                            <table style="width: 100%; border-collapse: collapse; border: 2px solid black;">
+                                <tr>
+                                    <td style="width: 50%; border: 1px solid black; padding: 1px;">
+                                        <b>Buyer:
+                                            <span style="margin-left: 30px;" t-field="docs.partner_id"/>
+                                        </b>
+                                        <br/>
+                                        <b>Address:</b>
+                                        <t t-esc="docs.partner_id.street"/>
+                                        <t t-esc="docs.partner_id.street2"/>,
+                                        <t t-esc="docs.partner_id.city"/>
+                                        <br/>
+                                        <b>State:</b>
+                                        <t t-esc="docs.partner_id.zip"/>
+                                        <t t-esc="docs.partner_id.state_id.name"/>,
+                                        <t t-esc="docs.partner_id.country_id.name"/>
+                                        <br/>
+                                        <b>GSTIN: 24ABCFM0833C1ZX (Now Coming static value)</b>
+                                    </td>
+                                    <td style="width: 50%; border: 1px solid black; padding: 5px;">
+                                        <p>
+                                            <span>Invoice No.:
+                                                <span t-field="docs.name"/>
+                                            </span>
+                                            <span style="margin-left: 50px;">Date:</span>
+                                            <t t-esc="docs.invoice_date.strftime('%Y-%m-%d')"/>
+                                        </p>
+                                        <p>
+                                            <span>L.R.No:111484</span>
+                                            <span style="margin-left: 90px;">L.R.Date: 01/08/2024</span>
+                                        </p>
+                                        <p>Transport:
+                                            <b>S V SUPPLY CHAIN SOLUTION</b>
+                                        </p>
+                                        <p>
+                                            <span>No Of Cartons: 4</span><br></br>
+                                            <span style="margin-left: 00px;">
+                                                Page No:1
+                                                
+                                            </span>
+
+                                        </p>
+                                        <p>Brand Name:PIONEER</p>
+                                    </td>
+                                </tr>
+                            </table>
+                            <table style="width: 100%; border: 1px solid black; border-collapse: collapse; margin-top: 10px; font-size: 10px;">
+                                <thead>
+                                    <tr>
+                                        <th style="border: 1px solid black; padding: 5px; text-align: center;"
+                                            rowspan="2">Sr
+                                        </th>
+                                        <th style="border: 1px solid black; padding: 5px; text-align: center;"
+                                            rowspan="2">Description
+                                        </th>
+                                        <th style="border: 1px solid black; padding: 5px; text-align: center;"
+                                            rowspan="2">H/F
+                                        </th>
+                                        <th style="border: 1px solid black; padding: 5px; text-align: center;"
+                                            rowspan="2">MRP
+                                        </th>
+                                        <th style="border: 1px solid black; padding: 5px; text-align: center;"
+                                            t-att-colspan="len(docs._get_dynamic_invoice_size_columns())">Size Details
+                                        </th>
+                                        <th style="border: 1px solid black; padding: 5px; text-align: center;"
+                                            rowspan="2">HSN Code
+                                        </th>
+                                        <th style="border: 1px solid black; padding: 5px; text-align: center;"
+                                            rowspan="2">GST %
+                                        </th>
+                                        <th style="border: 1px solid black; padding: 5px; text-align: center;"
+                                            rowspan="2">Pcs
+                                        </th>
+                                        <th style="border: 1px solid black; padding: 5px; text-align: center;"
+                                            rowspan="2">Rate
+                                        </th>
+                                        <th style="border: 1px solid black; padding: 5px; text-align: center;"
+                                            rowspan="2">Disc
+                                        </th>
+                                        <th style="border: 1px solid black; padding: 5px; text-align: center;"
+                                            rowspan="2">Amount
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <t t-foreach="docs._get_dynamic_invoice_size_columns()" t-as="size">
+                                            <th style="border: 1px solid black; padding: 5px; text-align: center;">
+                                                <t t-esc="size"/>
+                                            </th>
+                                        </t>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    <t t-foreach="docs.pioneer_invoice_customization()[0]" t-as="line">
+                                        <t t-if="line.get('sizes')">
+                                            <tr>
+                                                <t t-set="count" t-value="count + 1"/>
+                                                <td style="border: 1px solid black; text-align: center;">
+                                                    <t t-esc="count"/>
+                                                </td>
+                                                <td style="border: 1px solid black; text-align: center;">
+                                                    <t t-esc="line.get('product_name')"/>
+                                                </td>
+                                                <td style="border: 1px solid black; text-align: center;">
+                                                    <t t-esc="line.get('type')"/>
+                                                </td>
+                                                <td style="border: 1px solid black; text-align: center;">
+                                                    <t t-esc="line.get('lst_price')"/>
+                                                </td>
+                                                <t t-if="line.get('sizes')">
+                                                    <t t-foreach="docs._get_dynamic_invoice_size_columns()" t-as="size">
+                                                        <td style="border: 1px solid black; text-align: center;">
+                                                            <t t-esc="line.get('sizes').get(size, '-')"/>
+                                                        </td>
+                                                    </t>
+                                                </t>
+                                                <td style="border: 1px solid black; text-align: center;">
+                                                <t t-esc="line.get('hsn_product_code','')"/></td>
+
+                                                <td style="border: 1px solid black; text-align: center;">
+                                                    <t t-esc="line.get('taxes_id').mapped('name')"/>
+                                                </td>
+
+                                                <td style="border: 1px solid black; text-align: center;">
+                                                    <t t-esc="line.get('total_quantity')"/>
+                                                </td>
+                                                <td style="border: 1px solid black; text-align: center;">
+                                                    <t t-esc="line.get('rate')"/>
+                                                </td>
+
+                                                <td style="border: 1px solid black; text-align: center;">
+                                                    <t t-esc="line.get('disc')"/>
+                                                </td>
+
+                                                <td style="border: 1px solid black; text-align: center;">
+                                                    <t t-esc="'%.2f' % line.get('price_subtotal_type', 0.0)"/>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                    </t>
+                                    <tr>
+                                        <td colspan="4"
+                                            style="border: 1px solid black; text-align: center; font-weight: bold;"></td>
+                                        <t t-foreach="docs._get_dynamic_invoice_size_columns()" t-as="size">
+                                            <td style="border: 1px solid black; text-align: center; font-weight: bold;">
+                                                <t t-esc="docs.pioneer_invoice_customization()[1].get(size, 0)"/>
+                                            </td>
+                                        </t>
+                                        <td colspan="6" style="border: 1px solid black; text-align: center;"></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="13" style="border: 1px solid black; padding: 5px; height: 100px;">
+
+                                        </td>
+                                        <td colspan="5" style="padding: 5px; height: 100px;">
+
+                                        </td>
+                                    </tr>
+                                    <tr style="border-right: 1px solid;">
+                                        <td colspan="18"
+                                            style="border: 1px solid; padding: 5px; text-align: center; font-weight: bold;">
+                                            <b style="margin-left: -30px;">Our Bank: HDFC Bank A/c No.:
+                                                502-000-3980-9952 IFSC: HDFC0000429, Branch: Raopura, Vadodara
+                                            </b>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <table style="width: 100%; border-collapse: collapse">
+                                <tr>
+                                    <td style="width: 50%; border: 1px solid black; padding: 1px;">
+                                        <br/>
+                                        <b style="margin-left: 20px;">IRN No:</b>
+                                        <span style="margin-left: 20px;">
+                                            969b06877e6047c64fb03c84c2b80057e909cc5f787d7568191525dc08a1cb93
+                                        </span>
+
+                                    </td>
+                                </tr>
+                            </table>
+                            <div style="border: 2px solid black; padding: 10px; margin-bottom: 5px;">
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+
+                                    <div style="text-align: left; font-size: 18px; font-weight: bold; padding-top: 5px;">
+                                        <u>TERMS AND CONDITION :</u>
+                                    </div>
+                                    <div style="text-align: right; font-size: 12px; font-weight: bold; padding-bottom: 5px;">
+                                        <br/>
+                                        <b>For, PIONEER ENTERPRISE</b>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="text-align: right; font-size: 12px; padding-top: 5px;">
+                            <br/>
+                            <br/>
+                            <b>Authorised Signatory</b>
+                        </div>
+                        <div style="page-break-before: always;"/>
+                    </div>
+                </t>
+            </div>
+        </t>
+    </template>
+</odoo>
