@@ -32,7 +32,7 @@
                 <t t-set="v" t-value="docs.invoice_line_ids"/>
                 <t t-set="count" t-value="0"/>
                 
-                <t t-foreach="[v[i:i + 1] for i in range(0, len(v), 20)]" t-as="invoice_line_ids">
+                <t t-foreach="[v[i:i + 1] for i in range(0, len(v), 100)]" t-as="invoice_line_ids">
                     <div style="border: 2px solid black; padding: 10px; margin-bottom: 5px;">
                         <div style="text-align: center; font-size: 18px; font-weight: bold; padding-bottom: 5px;">
                             PIONEER ENTERPRISE
