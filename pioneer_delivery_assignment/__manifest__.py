@@ -15,8 +15,15 @@
     'data': [
         'security/ir.model.access.csv',
         'views/delivery_assignment_view.xml',
-        'wizard/product_attribute_wizard_views.xml',
+        'views/pioneer_dashboard_menus.xml',
     ],
+    'assets': {
+        'web.assets_backend': {
+            'pioneer_delivery_assignment/static/src/js/pioneer_delivery_dashboard.js',
+            'pioneer_delivery_assignment/static/src/xml/pioneer_dashboard_template_views.xml',
+        }
+    },
+
     'installable': True,
     'application': True,
     'auto_install': False,

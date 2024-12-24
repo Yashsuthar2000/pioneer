@@ -1,4 +1,5 @@
 from odoo import models, fields, api
+from odoo import http
 
 
 class DeliveryAssignment(models.Model):
@@ -15,21 +16,14 @@ class DeliveryAssignment(models.Model):
     style = fields.Many2one(comodel_name="product.attribute.value", domain=[('attribute_id.name', '=', 'style')], string="Style")
     grid_data = fields.Html(string="Grid Data", compute="_compute_grid_data")
     move_line_ids = fields.One2many('stock.move', 'delivery_assignment_id', string="Stock Moves")
-    # product_add_mode = fields.Selection(related='product_id.product_add_mode', depends=['product_id'])
 
     def delivery_assignment_grid(self):
-        print("delivery_assignment_grid:::::::::::::::::::::::::;", self)
         return {
-            'type': 'ir.actions.act_window',
-            'name': 'Product Size Wizard',
-            'res_model': 'product.size.wizard',
-            'view_mode': 'form',
-            'target': 'new',
-            'context': {
-                'default_product_id': self.product_tmpl_id.id,
-            },
+            'type': 'ir.actions.client',
+            'name': 'Delivery Dashboard',
+            'tag': 'delivery_dashboard',
+            'target': 'current',
         }
-
 
     @api.onchange('product_id')
     def _onchange_product_id(self):
@@ -56,7 +50,7 @@ class DeliveryAssignment(models.Model):
             else:
                 rec.move_line_ids = False
 
-    @api.depends('product_id', 'style',
+    @api.depends('product_id', 'style', 'move_line_ids',
                  'product_id.valid_product_template_attribute_line_ids',
                  'product_id.valid_product_template_attribute_line_ids.value_ids')
     def _compute_grid_data(self):
@@ -75,6 +69,9 @@ class DeliveryAssignment(models.Model):
             ])
 
             qty_available_list = [variant.qty_available for variant in filtered_variants]
+            assigned_qty_list = [getattr(variant, 'quantity', 0) for variant in self.move_line_ids]
+            remaining_qty_list = [available - assigned for available, assigned in
+                                  zip(qty_available_list, assigned_qty_list)]
             attribute_names = [
                 value.name
                 for line in record.product_id.valid_product_template_attribute_line_ids
@@ -82,7 +79,12 @@ class DeliveryAssignment(models.Model):
                 for value in line.value_ids
             ]
 
-            rows = [{'name': 'Available Quantity', 'data': qty_available_list}]
+            rows = [
+                {'name': 'Available Quantity', 'data': qty_available_list},
+                {'name': 'Assigned Quantity', 'data': assigned_qty_list},
+                {'name': 'Remaining Quantity', 'data': remaining_qty_list},
+            ]
+
             inline_css = """style="border-collapse: collapse; width: 100%; text-align: center; font-size: 14px;" """
             th_css = "style='border: 1px solid #ddd; padding: 8px; background-color: #f2f2f2;'"
             td_css = "style='border: 1px solid #ddd; padding: 8px;'"

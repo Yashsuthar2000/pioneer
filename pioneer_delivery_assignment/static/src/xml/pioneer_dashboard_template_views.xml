@@ -1,0 +1,68 @@
+<templates id="template" xml:space="preserve">
+    <t t-name="DeliveryDashboardMain">
+        <div class="container o_sale_dashboard" style="max-height: 1000px;">
+            <h3>Product Details</h3>
+            <table style="border-collapse: collapse; width: 100%; text-align: center; font-size: 14px;">
+                <thead>
+                    <tr>
+                        <th style="border: 1px solid #ddd; padding: 8px; background-color: #f2f2f2;">Description</th>
+                        <t t-foreach="Object.keys(grid_data['Available Quantity'])" t-as="header" t-key="header">
+                            <t t-if="header !== 'Description'">
+                                <th style="border: 1px solid #ddd; padding: 8px; background-color: #f2f2f2;">
+                                    <t t-esc="header" />
+                                </th>
+                            </t>
+                        </t>
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-foreach="Object.entries(grid_data)" t-as="row" t-key="row[0]">
+                        <tr>
+                            <td style="border: 1px solid #ddd; padding: 8px;">
+                                <t t-esc="row[1]['Description']" />
+                            </td>
+                            <t t-foreach="Object.entries(row[1])" t-as="cell" t-key="cell[0]">
+                                <t t-if="cell[0] !== 'Description'">
+                                    <td style="border: 1px solid #ddd; padding: 8px;">
+                                        <t t-esc="cell[1]" />
+                                    </td>
+                                </t>
+                            </t>
+                        </tr>
+                    </t>
+                </tbody>
+            </table>
+        </div>
+        <div class="container o_sale_dashboard" style="max-height: 1000px;">
+        <h2>Delivery Order Details</h2>
+            <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Barcode</th>
+                    <th>Customer</th>
+                    <th>Origin</th>
+                    <th>Product ID</th>
+                    <th>Quantity Ordered</th>
+                    <th>Quantity Done</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+                <tbody>
+                <!-- Iterate over the delivery_order_data array -->
+                    <t t-foreach="delivery_order_data" t-as="order" t-key="order.barcode_scan">
+                    <tr>
+                        <td><t t-esc="order.barcode_scan" /></td>
+                        <td><t t-esc="order.customer" /></td>
+                        <td><t t-esc="order.origin" /></td>
+                        <td><t t-esc="order.product_id" /></td>
+                        <td><t t-esc="order.product_uom_qty" /></td>
+                        <td><t t-esc="order.quantity" /></td>
+                        <td><t t-esc="order.state" /></td>
+                    </tr>
+                </t>
+            </tbody>
+        </table>
+    </div>
+
+    </t>
+</templates>
